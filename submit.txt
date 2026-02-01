@@ -1,0 +1,47 @@
+**This is a submission for the [GitHub Copilot CLI Challenge](https://dev.to/challenges/github-copilot)**
+
+### GitHub Repository
+
+```bash
+git clone git@github.com:Paulanton07/Github-Challenge.git
+```
+
+Or use HTTPS:
+```bash
+git clone https://github.com/Paulanton07/Github-Challenge.git
+```
+
+## What I Built
+I have built a crowd funding platform, currently in development but im submitting as a concept with mock data and no backend transacting functionality at present. 
+I find it extremely exciting to build and develop concepts that others might find useful. 
+I am fond of using the software that I make, I feel more connected to what I am doing
+
+## Demo
+
+[Watch the demo on YouTube](https://youtu.be/N3P2i0bF8Zo)
+
+{% embed https://youtu.be/N3P2i0bF8Zo %}
+
+### Platform Features:
+- Landing page
+- Members dashboard
+- Project listing and management
+- Industry-grade payment integration (third-party processor)
+
+
+
+## My Experience with GitHub Copilot CLI
+
+I like to start with a concept.txt or md file. I will then detail my vision/direction, and as much specific details for frameworks and languages to use (tech stack).
+
+I also add any research gathered, and once the Copilot AI has ingested my idea, I make enquiries asking for options and advice, like "what would you do if?" or "what do you think about that?".
+
+I then choose an option and start building, then edit and test until fully developed to my satisfaction. You can read more in the `concept.md` file found in the GitHub repo provided.
+
+Even just filling out this submissions form has taught me a lot - this will be my very first entry to any kind of competition, ever, so it's a big moment for me!
+
+Thank you for the opportunity, great fun to participate in this exciting event!
+
+---
+
+**Team member(s):** Paul Schneider
