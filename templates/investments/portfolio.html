@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Investment Portfolio - CrowdFund{% endblock %}
+
+{% block content %}
+<h1>Your Investment Portfolio</h1>
+
+<div class="grid">
+    {% for item in portfolio_data %}
+    <div class="card">
+        <h3>{{ item.project.title }}</h3>
+        <p><strong>Your Investment:</strong> R{{ item.investment.amount }}</p>
+        <p><strong>Ownership Stake:</strong> {{ item.ownership|floatformat:4 }}%</p>
+        <p><strong>Project Status:</strong> {{ item.project.get_status_display }}</p>
+        <p><strong>Total Dividends:</strong> R{{ item.dividends_earned }}</p>
+        
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee;">
+            <p style="font-size: 0.9rem; color: #666;"><strong>Project Revenue:</strong> R{{ item.project.total_revenue }}</p>
+            <p style="font-size: 0.9rem; color: #666;"><strong>Invested:</strong> {{ item.investment.invested_at|date:"M d, Y" }}</p>
+        </div>
+        
+        <a href="{% url 'project_detail' item.project.pk %}" class="btn btn-secondary" style="margin-top: 1rem; display: inline-block;">View Project</a>
+    </div>
+    {% empty %}
+    <p>You haven't made any investments yet. <a href="{% url 'project_list' %}">Browse projects</a> to get started!</p>
+    {% endfor %}
+</div>
+
+<div class="card" style="margin-top: 2rem;">
+    <h2>Understanding Your Returns</h2>
+    <p>Your dividends are calculated based on your ownership percentage in each project. When a project generates revenue, dividends are distributed proportionally to all investors.</p>
+    <p style="margin-top: 1rem;"><strong>Formula:</strong> Your Dividend = (Your Ownership % / 100) × Undistributed Project Revenue</p>
+</div>
+{% endblock %}

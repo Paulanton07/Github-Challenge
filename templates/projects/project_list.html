@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Projects - CrowdFund{% endblock %}
+
+{% block content %}
+<h1>Active Projects</h1>
+<p style="margin-bottom: 2rem; color: #666;">Invest in projects and earn dividends based on your ownership percentage</p>
+
+<div class="grid">
+    {% for project in projects %}
+    <div class="card">
+        {% if project.image %}
+        <img src="{{ project.image.url }}" alt="{{ project.title }}" style="width: 100%; border-radius: 5px; margin-bottom: 1rem;">
+        {% endif %}
+        <h3>{{ project.title }}</h3>
+        <p style="color: #666; margin: 1rem 0;">{{ project.description|truncatewords:30 }}</p>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ project.funding_percentage }}%"></div>
+        </div>
+        
+        <p><strong>R{{ project.current_funding|floatformat:2 }} / R{{ project.funding_goal|floatformat:2 }}</strong></p>
+        <p style="color: #666;">{{ project.funding_percentage|floatformat:1 }}% funded</p>
+        <p style="color: #666;">{{ project.total_investors }} investor(s)</p>
+        
+        <a href="{% url 'project_detail' project.pk %}" class="btn" style="margin-top: 1rem; display: inline-block; width: 100%;">View & Invest</a>
+    </div>
+    {% empty %}
+    <p>No active projects available at the moment.</p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="text-align: center; padding: 3rem 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px; margin-bottom: 2rem;">
+    <h1 style="font-size: 3rem; margin-bottom: 1rem;">Invest in Dreams, Share in Success</h1>
+    <p style="font-size: 1.3rem; margin-bottom: 2rem;">Micro Stock Exchange Crowdfunding Platform</p>
+    <a href="{% url 'project_list' %}" class="btn" style="font-size: 1.1rem;">Browse Projects</a>
+</div>
+
+<div class="stats">
+    <div class="stat-card">
+        <h3 style="font-size: 2.5rem;">{{ total_projects }}</h3>
+        <p>Total Projects</p>
+    </div>
+    <div class="stat-card">
+        <h3 style="font-size: 2.5rem;">{{ total_funded }}</h3>
+        <p>Successfully Funded</p>
+    </div>
+    <div class="stat-card">
+        <h3 style="font-size: 2.5rem;">{{ active_projects|length }}</h3>
+        <p>Active Campaigns</p>
+    </div>
+</div>
+
+<h2 style="margin-bottom: 1.5rem;">Featured Projects</h2>
+<div class="grid">
+    {% for project in active_projects %}
+    <div class="card">
+        <h3>{{ project.title }}</h3>
+        <p style="color: #666; margin: 1rem 0;">{{ project.description|truncatewords:20 }}</p>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ project.funding_percentage }}%"></div>
+        </div>
+        <p><strong>R{{ project.current_funding }} / R{{ project.funding_goal }}</strong> ({{ project.funding_percentage|floatformat:1 }}%)</p>
+        <p style="color: #666; margin-top: 0.5rem;">{{ project.total_investors }} investor(s)</p>
+        <a href="{% url 'project_detail' project.pk %}" class="btn" style="margin-top: 1rem; display: inline-block;">View Details</a>
+    </div>
+    {% empty %}
+    <p>No active projects at the moment.</p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ project.title }} - CrowdFund{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <a href="{% url 'project_list' %}" style="color: #3498db; text-decoration: none;">&larr; Back to Projects</a>
+    
+    <h1 style="margin-top: 1rem;">{{ project.title }}</h1>
+    <p style="color: #666;">Created by {{ project.creator.username }}</p>
+    
+    {% if project.image %}
+    <img src="{{ project.image.url }}" alt="{{ project.title }}" style="width: 100%; border-radius: 10px; margin: 1.5rem 0;">
+    {% endif %}
+    
+    <div class="card">
+        <h2>Funding Progress</h2>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ project.funding_percentage }}%"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 1rem;">
+            <div>
+                <h3 style="color: #27ae60;">R{{ project.current_funding|floatformat:2 }}</h3>
+                <p style="color: #666;">raised of R{{ project.funding_goal|floatformat:2 }}</p>
+            </div>
+            <div>
+                <h3>{{ project.total_investors }}</h3>
+                <p style="color: #666;">investor(s)</p>
+            </div>
+            <div>
+                <h3>{{ days_remaining }}</h3>
+                <p style="color: #666;">days remaining</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h2>About This Project</h2>
+        <p style="white-space: pre-line;">{{ project.description }}</p>
+    </div>
+    
+    {% if user_investment %}
+    <div class="card" style="background: #d4edda; border-left: 4px solid #27ae60;">
+        <h3>Your Investment</h3>
+        <p><strong>Amount:</strong> R{{ user_investment.amount }}</p>
+        <p><strong>Ownership:</strong> {{ user_investment.ownership_percentage|floatformat:4 }}%</p>
+        <p><strong>Dividends Earned:</strong> R{{ user_investment.total_dividends_earned }}</p>
+    </div>
+    {% endif %}
+    
+    {% if user.is_authenticated and project.is_active %}
+    <div class="card">
+        <h2>Invest in This Project</h2>
+        <p style="margin-bottom: 1rem; color: #666;">⚠️ Mock investment - no real payment processing</p>
+        <form method="post" action="{% url 'invest_in_project' project.pk %}">
+            {% csrf_token %}
+            <div style="margin-bottom: 1rem;">
+                <label for="amount" style="display: block; margin-bottom: 0.5rem;">Investment Amount (R)</label>
+                <input type="number" name="amount" id="amount" step="0.01" min="1" required 
+                       style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem;">
+            </div>
+            <button type="submit" class="btn" style="width: 100%;">Invest Now (Mock)</button>
+        </form>
+    </div>
+    {% elif not user.is_authenticated %}
+    <div class="card" style="text-align: center; background: #fff3cd;">
+        <p><a href="{% url 'login' %}" class="btn">Login to Invest</a></p>
+    </div>
+    {% endif %}
+    
+    <div class="card">
+        <h2>Revenue & Dividends</h2>
+        <p><strong>Total Revenue:</strong> R{{ project.total_revenue|floatformat:2 }}</p>
+        <p><strong>Distributed:</strong> R{{ project.revenue_distributed|floatformat:2 }}</p>
+        <p style="color: #666; margin-top: 1rem;">Dividends are calculated based on your ownership percentage of the project.</p>
+    </div>
+</div>
+{% endblock %}

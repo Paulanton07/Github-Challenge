@@ -1,0 +1,19 @@
+a crow funding platform, user buys the software, 
+they host it and post all over to promote,
+
+A crowd funding dashboard and site, landing page, link to a members page also with industry grade payment platform .(condider adding a third party to handle payments money going in and out)
+
+basic concept is a job is posted, needing funding, lets say I want to make a bench and it costs R3000 in materials and labour to make, 
+
+CAN WE DISCUSS! 
+best method to set for a micro stock exchange with investmenst and dividents , each member being able to invest in chosen project and have percentages and returns logged and tracked.
+
+I will us Django with Python to build this, if Rust is appropriate we can use for backend ??? CAN DISCUSS.
+
+RESEARCH
+- All-or-nothing: Funds are collected only if the goal is met (common on Kickstarter)
+
+- Donation/Reward Models: No financial payout; backers receive rewards or satisfaction of supporting.
+
+ (in South Africa, platforms must comply with Financial Sector Conduct Authority rules).
+

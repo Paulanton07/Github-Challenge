@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block title %}Storefront Builder - CrowdFund{% endblock %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: 1fr 400px; gap: 2rem;">
+    <!-- Main Builder Form -->
+    <div>
+        <h1>🎨 Build Your Storefront</h1>
+        <p style="color: #666; margin-bottom: 2rem;">Customize your crowdfunding page - choose a template or upload your own code!</p>
+        
+        <form method="post" enctype="multipart/form-data" id="builderForm">
+            {% csrf_token %}
+            
+            <!-- Basic Settings -->
+            <div class="card">
+                <h2>Basic Settings</h2>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Storefront Name</label>
+                    <input type="text" name="storefront_name" value="{{ storefront.storefront_name }}" required
+                           style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Tagline</label>
+                    <input type="text" name="tagline" value="{{ storefront.tagline }}" placeholder="e.g., Building Dreams Together"
+                           style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">About Your Store</label>
+                    <textarea name="about_text" rows="5" placeholder="Tell visitors about your mission and projects..."
+                              style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px;">{{ storefront.about_text }}</textarea>
+                </div>
+            </div>
+            
+            <!-- Branding -->
+            <div class="card">
+                <h2>Branding</h2>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Logo</label>
+                    {% if storefront.logo %}
+                    <img src="{{ storefront.logo.url }}" alt="Logo" style="max-width: 200px; margin-bottom: 0.5rem; border-radius: 5px;">
+                    {% endif %}
+                    <input type="file" name="logo" accept="image/*" style="display: block;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Banner Image</label>
+                    {% if storefront.banner_image %}
+                    <img src="{{ storefront.banner_image.url }}" alt="Banner" style="max-width: 100%; margin-bottom: 0.5rem; border-radius: 5px;">
+                    {% endif %}
+                    <input type="file" name="banner_image" accept="image/*" style="display: block;">
+                </div>
+            </div>
+            
+            <!-- Design -->
+            <div class="card">
+                <h2>Design & Colors</h2>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Template</label>
+                    <select name="template" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px;">
+                        <option value="modern" {% if storefront.template == 'modern' %}selected{% endif %}>Modern & Clean</option>
+                        <option value="bold" {% if storefront.template == 'bold' %}selected{% endif %}>Bold & Colorful</option>
+                        <option value="minimal" {% if storefront.template == 'minimal' %}selected{% endif %}>Minimal & Professional</option>
+                        <option value="creative" {% if storefront.template == 'creative' %}selected{% endif %}>Creative & Artistic</option>
+                    </select>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Primary Color</label>
+                        <input type="color" name="primary_color" value="{{ storefront.primary_color }}" 
+                               style="width: 100%; height: 50px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Secondary Color</label>
+                        <input type="color" name="secondary_color" value="{{ storefront.secondary_color }}" 
+                               style="width: 100%; height: 50px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Accent Color</label>
+                        <input type="color" name="accent_color" value="{{ storefront.accent_color }}" 
+                               style="width: 100%; height: 50px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Social Links -->
+            <div class="card">
+                <h2>Social Media</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Facebook URL</label>
+                        <input type="url" name="facebook_url" value="{{ storefront.facebook_url }}" placeholder="https://facebook.com/..."
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Twitter URL</label>
+                        <input type="url" name="twitter_url" value="{{ storefront.twitter_url }}" placeholder="https://twitter.com/..."
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Instagram URL</label>
+                        <input type="url" name="instagram_url" value="{{ storefront.instagram_url }}" placeholder="https://instagram.com/..."
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">LinkedIn URL</label>
+                        <input type="url" name="linkedin_url" value="{{ storefront.linkedin_url }}" placeholder="https://linkedin.com/..."
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact -->
+            <div class="card">
+                <h2>Contact Information</h2>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Contact Email</label>
+                    <input type="email" name="contact_email" value="{{ storefront.contact_email }}"
+                           style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Contact Phone</label>
+                    <input type="tel" name="contact_phone" value="{{ storefront.contact_phone }}"
+                           style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+            </div>
+            
+            <!-- Advanced Code Upload -->
+            <div class="card" style="background: #f8f9fa;">
+                <h2>🔧 Advanced: Custom Code</h2>
+                <p style="color: #666; margin-bottom: 1rem;">For developers: Add custom CSS or HTML to fully customize your storefront</p>
+                
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Custom CSS</label>
+                    <textarea name="custom_css" rows="8" placeholder="/* Your custom CSS here */"
+                              style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; font-family: monospace;">{{ storefront.custom_css }}</textarea>
+                </div>
+                
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Custom Header HTML</label>
+                    <textarea name="custom_html_header" rows="5" placeholder="<!-- Custom header HTML -->"
+                              style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; font-family: monospace;">{{ storefront.custom_html_header }}</textarea>
+                </div>
+                
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Custom Footer HTML</label>
+                    <textarea name="custom_html_footer" rows="5" placeholder="<!-- Custom footer HTML -->"
+                              style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; font-family: monospace;">{{ storefront.custom_html_footer }}</textarea>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn" style="width: 100%; font-size: 1.1rem; padding: 1rem;">💾 Save Storefront</button>
+        </form>
+    </div>
+    
+    <!-- Preview Sidebar -->
+    <div>
+        <div class="card" style="position: sticky; top: 2rem;">
+            <h3>Preview & Actions</h3>
+            <p style="color: #666; margin-bottom: 1rem;">Your storefront URL:</p>
+            <a href="{% url 'storefront_view' storefront.slug %}" target="_blank" 
+               style="display: block; padding: 0.75rem; background: #ecf0f1; border-radius: 5px; text-align: center; text-decoration: none; color: #2c3e50; margin-bottom: 1rem;">
+                /store/{{ storefront.slug }}/
+            </a>
+            <a href="{% url 'storefront_view' storefront.slug %}" target="_blank" class="btn" style="width: 100%; text-align: center; margin-bottom: 1rem;">
+                👁️ Preview Storefront
+            </a>
+            <hr style="margin: 1.5rem 0;">
+            <h4>Quick Tips:</h4>
+            <ul style="color: #666; font-size: 0.9rem; line-height: 1.8;">
+                <li>Upload a logo for instant branding</li>
+                <li>Choose colors that match your brand</li>
+                <li>Add social links to build trust</li>
+                <li>Use custom CSS for advanced styling</li>
+                <li>Preview after each change</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

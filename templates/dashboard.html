@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - CrowdFund{% endblock %}
+
+{% block content %}
+<h1>Welcome back, {{ user.username }}! 👋</h1>
+
+<div class="stats">
+    <div class="stat-card">
+        <h3 style="font-size: 2rem;">R{{ total_invested }}</h3>
+        <p>Total Invested</p>
+    </div>
+    <div class="stat-card">
+        <h3 style="font-size: 2rem;">{{ projects_backed }}</h3>
+        <p>Projects Backed</p>
+    </div>
+    <div class="stat-card">
+        <h3 style="font-size: 2rem;">R{{ total_dividends }}</h3>
+        <p>Total Dividends Earned</p>
+    </div>
+</div>
+
+<h2>Your Investments</h2>
+<div class="grid">
+    {% for investment in user_investments %}
+    <div class="card">
+        <h3>{{ investment.project.title }}</h3>
+        <p><strong>Your Investment:</strong> R{{ investment.amount }}</p>
+        <p><strong>Ownership:</strong> {{ investment.ownership_percentage|floatformat:4 }}%</p>
+        <p><strong>Dividends Earned:</strong> R{{ investment.total_dividends_earned }}</p>
+        <p><strong>Status:</strong> {{ investment.get_status_display }}</p>
+        <a href="{% url 'project_detail' investment.project.pk %}" class="btn btn-secondary">View Project</a>
+    </div>
+    {% empty %}
+    <p>You haven't made any investments yet. <a href="{% url 'project_list' %}">Browse projects</a> to get started!</p>
+    {% endfor %}
+</div>
+
+<h2 style="margin-top: 2rem;">Your Projects</h2>
+<div class="grid">
+    {% for project in user_projects %}
+    <div class="card">
+        <h3>{{ project.title }}</h3>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ project.funding_percentage }}%"></div>
+        </div>
+        <p><strong>R{{ project.current_funding }} / R{{ project.funding_goal }}</strong></p>
+        <p><strong>Status:</strong> {{ project.get_status_display }}</p>
+        <p><strong>Investors:</strong> {{ project.total_investors }}</p>
+    </div>
+    {% empty %}
+    <p>You haven't created any projects yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

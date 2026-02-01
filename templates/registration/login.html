@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - CrowdFund{% endblock %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 3rem auto;">
+    <div class="card">
+        <h2>Login to Your Account</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div style="margin-bottom: 1rem;">
+                <label for="username" style="display: block; margin-bottom: 0.5rem;">Username</label>
+                <input type="text" name="username" id="username" required 
+                       style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <label for="password" style="display: block; margin-bottom: 0.5rem;">Password</label>
+                <input type="password" name="password" id="password" required 
+                       style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <button type="submit" class="btn" style="width: 100%;">Login</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

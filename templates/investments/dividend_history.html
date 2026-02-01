@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Dividend History - CrowdFund{% endblock %}
+
+{% block content %}
+<h1>Dividend Payment History</h1>
+
+<div class="card">
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="border-bottom: 2px solid #ddd; text-align: left;">
+                <th style="padding: 1rem;">Project</th>
+                <th style="padding: 1rem;">Amount</th>
+                <th style="padding: 1rem;">Status</th>
+                <th style="padding: 1rem;">Date Calculated</th>
+                <th style="padding: 1rem;">Date Paid</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dividend in dividends %}
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 1rem;">{{ dividend.investment.project.title }}</td>
+                <td style="padding: 1rem;">R{{ dividend.amount }}</td>
+                <td style="padding: 1rem;">
+                    <span style="padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem; 
+                                 background: {% if dividend.status == 'paid' %}#d4edda{% elif dividend.status == 'pending' %}#fff3cd{% else %}#f8d7da{% endif %}; 
+                                 color: {% if dividend.status == 'paid' %}#155724{% elif dividend.status == 'pending' %}#856404{% else %}#721c24{% endif %};">
+                        {{ dividend.get_status_display }}
+                    </span>
+                </td>
+                <td style="padding: 1rem;">{{ dividend.calculated_at|date:"M d, Y" }}</td>
+                <td style="padding: 1rem;">{{ dividend.paid_at|date:"M d, Y"|default:"—" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="padding: 2rem; text-align: center; color: #666;">
+                    No dividend payments yet. Dividends will appear here when projects generate revenue.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card" style="margin-top: 2rem; background: #fff3cd;">
+    <h3>ℹ️ Note</h3>
+    <p>This is a mock payment system. Real dividend payments would be processed through integrated payment gateways after legal compliance is established.</p>
+</div>
+{% endblock %}
