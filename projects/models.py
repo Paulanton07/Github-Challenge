@@ -48,21 +48,109 @@ class Project(models.Model):
     def total_investors(self):
         return self.investments.values('investor').distinct().count()
     
-    def calculate_dividends(self):
-        """Calculate pending dividends for all investors"""
-        if self.total_revenue <= 0 or self.current_funding <= 0:
+    @property
+    def pending_revenue(self):
+        """Revenue not yet distributed as dividends"""
+        return self.total_revenue - self.revenue_distributed
+    
+    @property
+    def dividend_pool(self):
+        """Total amount available for dividend distribution"""
+        return self.pending_revenue
+    
+    def calculate_dividends(self, revenue_amount=None):
+        """
+        Calculate dividends for all investors based on ownership percentage.
+        
+        Args:
+            revenue_amount: Specific revenue to distribute. If None, uses all pending revenue.
+        
+        Returns:
+            dict: Investor data with ownership and calculated dividends
+        """
+        if self.current_funding <= 0:
             return {}
         
-        pending_revenue = self.total_revenue - self.revenue_distributed
-        dividends = {}
+        # Use specified amount or all pending revenue
+        distributable_revenue = revenue_amount if revenue_amount else self.pending_revenue
         
-        for investment in self.investments.all():
+        if distributable_revenue <= 0:
+            return {}
+        
+        dividends = {}
+        total_dividend_paid = 0
+        investors_count = 0
+        
+        # Get completed investments only
+        completed_investments = self.investments.filter(status='completed')
+        
+        for investment in completed_investments:
             ownership_percentage = (investment.amount / self.current_funding) * 100
-            dividend_amount = (ownership_percentage / 100) * pending_revenue
+            dividend_amount = (ownership_percentage / 100) * distributable_revenue
+            
             dividends[investment.investor.username] = {
-                'ownership': ownership_percentage,
-                'dividend': dividend_amount
+                'investment_id': investment.id,
+                'investment_amount': float(investment.amount),
+                'ownership': round(ownership_percentage, 2),
+                'dividend': round(dividend_amount, 2)
             }
+            total_dividend_paid += dividend_amount
+            investors_count += 1
+        
+        # Add summary
+        dividends['_summary'] = {
+            'total_distributed': round(total_dividend_paid, 2),
+            'revenue_pool': float(distributable_revenue),
+            'investors_count': investors_count
+        }
         
         return dividends
+    
+    def distribute_dividends(self, revenue_amount=None):
+        """
+        Create dividend payment records for all investors.
+        
+        Args:
+            revenue_amount: Specific revenue to distribute. If None, uses all pending revenue.
+        
+        Returns:
+            list: Created DividendPayment objects
+        """
+        from investments.models import DividendPayment
+        
+        dividends_data = self.calculate_dividends(revenue_amount)
+        
+        if not dividends_data or '_summary' not in dividends_data:
+            return []
+        
+        # Remove summary for processing
+        summary = dividends_data.pop('_summary')
+        dividend_payments = []
+        
+        for username, data in dividends_data.items():
+            from django.contrib.auth import get_user_model
+            User = get_user_model()
+            
+            try:
+                investment = self.investments.get(id=data['investment_id'])
+                
+                # Create dividend payment record
+                dividend = DividendPayment.objects.create(
+                    investment=investment,
+                    amount=data['dividend'],
+                    status='pending',
+                    notes=f"Dividend from {summary['revenue_pool']} revenue. {data['ownership']}% ownership."
+                )
+                dividend_payments.append(dividend)
+                
+            except Exception as e:
+                continue
+        
+        # Update revenue distributed
+        if dividend_payments:
+            distributed_amount = revenue_amount if revenue_amount else self.pending_revenue
+            self.revenue_distributed += distributed_amount
+            self.save()
+        
+        return dividend_payments
 

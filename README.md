@@ -148,28 +148,48 @@ python manage.py collectstatic
 | Bob      | R900      | 30%         | R300                      |
 | Carol    | R600      | 20%         | R200                      |
 
+*This example is validated by automated tests in `investments/tests.py`*
+
+---
+
+## 📁 Project Documentation
+
+- **README.md** - This file, project overview and setup
+- **ENHANCEMENTS.md** - Phase 1 completed features and testing
+- **PHASE2_RESEARCH.md** - Legal research, compliance framework, and Phase 3 planning
+- **concept.md** - Original concept and development approach
+
 ## 🛣️ Development Roadmap
 
-### ✅ Phase 1: Core Platform (Current)
-- User authentication and authorization
-- Landing pages and dashboards
-- Project listing and management
-- Investment tracking UI (mock data)
-- Ownership percentage calculations
-- Admin panel
+### ✅ Phase 1: Core Platform (Complete)
+- ✅ User authentication and authorization
+- ✅ Landing pages and dashboards
+- ✅ Project listing and management
+- ✅ Investment tracking UI (mock data)
+- ✅ Ownership percentage calculations
+- ✅ Enhanced dividend calculation logic
+- ✅ Investment analytics and visualizations
+- ✅ Admin panel with bulk actions
+- ✅ Comprehensive test suite (11 tests passing)
+- ✅ Management commands for dividend distribution
 
-### 🔄 Phase 2: Legal Research (In Progress)
-- Research equity crowdfunding regulations
-- Identify compliance requirements
-- Choose payment processor
-- Consult legal/financial advisors
+### 🔄 Phase 2: Legal Research (Current)
+- 🔄 Research equity crowdfunding regulations by jurisdiction
+- 🔄 Identify compliance requirements (KYC/AML, disclosures)
+- 🔄 Evaluate payment processors (Stripe/PayPal/Paystack)
+- 🔄 Design compliance framework
+- 📋 Action: Consult with securities attorney
+- 📋 Action: Select target jurisdiction
+- See **PHASE2_RESEARCH.md** for detailed findings
 
 ### 📅 Phase 3: Payment Integration (Planned)
-- Integrate payment processor API (Stripe/PayPal/Paystack)
-- Implement KYC/compliance checks
+- Implement KYC/AML verification module
+- Integrate payment processor API (sandbox mode first)
+- Build escrow management system
 - Real transaction handling
-- Dividend distribution system
-- Security audit
+- Automated dividend distribution
+- Tax reporting system
+- Security audit and penetration testing
 
 ## ⚠️ Important Notes
 

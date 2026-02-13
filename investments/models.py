@@ -36,7 +36,33 @@ class Investment(models.Model):
     
     @property
     def total_dividends_earned(self):
+        """Total dividends earned across all statuses"""
         return sum(div.amount for div in self.dividend_payments.all())
+    
+    @property
+    def paid_dividends(self):
+        """Total dividends that have been paid out"""
+        return sum(div.amount for div in self.dividend_payments.filter(status='paid'))
+    
+    @property
+    def pending_dividends(self):
+        """Total dividends pending payment"""
+        return sum(div.amount for div in self.dividend_payments.filter(status='pending'))
+    
+    def calculate_potential_dividend(self, revenue_amount):
+        """
+        Calculate potential dividend from a hypothetical revenue amount.
+        
+        Args:
+            revenue_amount: The revenue amount to calculate dividend from
+        
+        Returns:
+            Decimal: Calculated dividend amount
+        """
+        if self.project.current_funding > 0:
+            ownership = self.ownership_percentage / 100
+            return revenue_amount * ownership
+        return 0
 
 
 class DividendPayment(models.Model):
