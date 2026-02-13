@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'accounts',
     'projects',
     'investments',
+    'payments',  # New app for payment integration
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,26 @@ LOGOUT_REDIRECT_URL = '/'
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# =====================================
+# STRIPE PAYMENT CONFIGURATION
+# =====================================
+import os
+from decouple import config, Csv
+
+# Stripe API Keys (use environment variables in production)
+STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY', default='pk_test_default_key_for_demo')
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY', default='sk_test_default_key_for_demo')
+STRIPE_WEBHOOK_SECRET = config('STRIPE_WEBHOOK_SECRET', default='')
+
+# Platform Settings
+PLATFORM_FEE_PERCENTAGE = 5.0  # 5% platform fee on successful campaigns
+MIN_INVESTMENT_AMOUNT = 100.00  # Minimum R100 investment
+MAX_INVESTMENT_AMOUNT = 50000.00  # Maximum R50,000 investment per project
+
+# Sandbox/Demo Mode
+SANDBOX_MODE = config('SANDBOX_MODE', default=True, cast=bool)  # Set to False for production
+
+# Investment Limits (regulatory compliance)
+DEFAULT_ANNUAL_INVESTMENT_LIMIT = 50000.00  # R50,000 per year for non-accredited
+ACCREDITED_ANNUAL_LIMIT = 500000.00  # R500,000 for accredited investors
