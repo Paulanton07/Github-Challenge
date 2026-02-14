@@ -20,6 +20,33 @@
     </div>
 </div>
 
+<!-- Chart Section -->
+<div class="chart-section" style="margin-bottom: 3rem;">
+    <h2>Visual Analytics</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem; margin-top: 1.5rem;">
+        {% if portfolio_amounts %}
+        <div class="card">
+            <h3 style="margin-bottom: 1rem;">💼 Portfolio Distribution</h3>
+            <canvas id="portfolioChart" style="max-height: 300px;"></canvas>
+        </div>
+        {% endif %}
+        
+        {% if project_progress %}
+        <div class="card">
+            <h3 style="margin-bottom: 1rem;">📊 Your Projects Funding</h3>
+            <canvas id="projectsChart" style="max-height: 300px;"></canvas>
+        </div>
+        {% endif %}
+    </div>
+    
+    {% if user_investments %}
+    <div class="card" style="margin-top: 2rem;">
+        <h3 style="margin-bottom: 1rem;">🎯 Investment Performance</h3>
+        <canvas id="performanceChart" style="max-height: 250px;"></canvas>
+    </div>
+    {% endif %}
+</div>
+
 <h2>Your Investments</h2>
 <div class="grid">
     {% for investment in user_investments %}
@@ -52,4 +79,142 @@
     <p>You haven't created any projects yet.</p>
     {% endfor %}
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Chart.js default configuration
+Chart.defaults.font.family = "'Segoe UI', Roboto, sans-serif";
+Chart.defaults.color = '#666';
+
+{% if portfolio_amounts %}
+// Portfolio Distribution - Doughnut Chart
+const portfolioCtx = document.getElementById('portfolioChart').getContext('2d');
+new Chart(portfolioCtx, {
+    type: 'doughnut',
+    data: {
+        labels: {{ portfolio_labels|safe }},
+        datasets: [{
+            data: {{ portfolio_amounts|safe }},
+            backgroundColor: [
+                '#667eea', '#764ba2', '#f093fb', '#4facfe',
+                '#43e97b', '#fa709a', '#fee140', '#30cfd0'
+            ],
+            borderWidth: 2,
+            borderColor: '#fff'
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: { padding: 15, font: { size: 11 } }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.label + ': R' + context.parsed.toFixed(2);
+                    }
+                }
+            }
+        }
+    }
+});
+{% endif %}
+
+{% if project_progress %}
+// Projects Funding - Bar Chart
+const projectsCtx = document.getElementById('projectsChart').getContext('2d');
+new Chart(projectsCtx, {
+    type: 'bar',
+    data: {
+        labels: {{ project_names|safe }},
+        datasets: [{
+            label: 'Current Funding',
+            data: {{ project_progress|safe }},
+            backgroundColor: '#27ae60',
+            borderRadius: 5
+        }, {
+            label: 'Funding Goal',
+            data: {{ project_goals|safe }},
+            backgroundColor: '#ecf0f1',
+            borderRadius: 5
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value) {
+                        return 'R' + value.toLocaleString();
+                    }
+                }
+            }
+        },
+        plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.dataset.label + ': R' + context.parsed.y.toFixed(2);
+                    }
+                }
+            }
+        }
+    }
+});
+{% endif %}
+
+{% if user_investments %}
+// Investment Performance - Horizontal Bar Chart
+const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+new Chart(performanceCtx, {
+    type: 'bar',
+    data: {
+        labels: [{% for inv in user_investments %}'{{ inv.project.title|truncatechars:20|escapejs }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+        datasets: [{
+            label: 'Investment Amount',
+            data: [{% for inv in user_investments %}{{ inv.amount }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+            backgroundColor: '#3498db',
+            borderRadius: 5
+        }, {
+            label: 'Dividends Earned',
+            data: [{% for inv in user_investments %}{{ inv.total_dividends_earned }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+            backgroundColor: '#27ae60',
+            borderRadius: 5
+        }]
+    },
+    options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: {
+            x: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value) {
+                        return 'R' + value.toLocaleString();
+                    }
+                }
+            }
+        },
+        plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.dataset.label + ': R' + context.parsed.x.toFixed(2);
+                    }
+                }
+            }
+        }
+    }
+});
+{% endif %}
+</script>
 {% endblock %}

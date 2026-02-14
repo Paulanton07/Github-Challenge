@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment History - CrowdFund{% endblock %}
+
+{% block content %}
+<h1>Payment History</h1>
+
+{% if sandbox_mode %}
+<div style="padding: 1rem; background: #fff3cd; border-left: 4px solid #f39c12; border-radius: 5px; margin-bottom: 2rem;">
+    🧪 <strong>SANDBOX MODE</strong> - These are mock transactions for testing purposes
+</div>
+{% endif %}
+
+<div class="card">
+    <h2>All Transactions</h2>
+    
+    {% if transactions %}
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+            <thead>
+                <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                    <th style="padding: 0.75rem; text-align: left;">Date</th>
+                    <th style="padding: 0.75rem; text-align: left;">Type</th>
+                    <th style="padding: 0.75rem; text-align: right;">Amount</th>
+                    <th style="padding: 0.75rem; text-align: center;">Status</th>
+                    <th style="padding: 0.75rem; text-align: left;">Transaction ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                <tr style="border-bottom: 1px solid #dee2e6;">
+                    <td style="padding: 0.75rem;">{{ transaction.created_at|date:"M d, Y" }}</td>
+                    <td style="padding: 0.75rem;">
+                        {% if transaction.transaction_type == 'investment' %}💰 Investment
+                        {% elif transaction.transaction_type == 'dividend' %}📈 Dividend
+                        {% elif transaction.transaction_type == 'refund' %}↩️ Refund
+                        {% elif transaction.transaction_type == 'platform_fee' %}💳 Platform Fee
+                        {% endif %}
+                    </td>
+                    <td style="padding: 0.75rem; text-align: right; font-weight: bold;">
+                        R{{ transaction.amount|floatformat:2 }}
+                    </td>
+                    <td style="padding: 0.75rem; text-align: center;">
+                        {% if transaction.status == 'succeeded' %}
+                        <span style="background: #d4edda; color: #155724; padding: 0.25rem 0.75rem; border-radius: 3px; font-size: 0.875rem;">
+                            ✓ Succeeded
+                        </span>
+                        {% elif transaction.status == 'pending' %}
+                        <span style="background: #fff3cd; color: #856404; padding: 0.25rem 0.75rem; border-radius: 3px; font-size: 0.875rem;">
+                            ⏳ Pending
+                        </span>
+                        {% elif transaction.status == 'failed' %}
+                        <span style="background: #f8d7da; color: #721c24; padding: 0.25rem 0.75rem; border-radius: 3px; font-size: 0.875rem;">
+                            ✗ Failed
+                        </span>
+                        {% elif transaction.status == 'refunded' %}
+                        <span style="background: #d1ecf1; color: #0c5460; padding: 0.25rem 0.75rem; border-radius: 3px; font-size: 0.875rem;">
+                            ↩️ Refunded
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 0.75rem; font-family: monospace; font-size: 0.875rem; color: #666;">
+                        {{ transaction.transaction_id|truncatechars:25 }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p style="margin-top: 1rem; color: #666;">No transactions yet. <a href="{% url 'project_list' %}">Start investing</a> to see your payment history.</p>
+    {% endif %}
+</div>
+
+<div style="margin-top: 2rem;">
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary">← Back to Dashboard</a>
+</div>
+{% endblock %}

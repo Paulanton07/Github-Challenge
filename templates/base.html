@@ -38,6 +38,7 @@
             {% if user.is_authenticated %}
                 <a href="{% url 'dashboard' %}">Dashboard</a>
                 <a href="{% url 'investment_portfolio' %}">Portfolio</a>
+                <a href="{% url 'payment_history' %}">Payments</a>
                 <a href="{% url 'storefront_builder' %}">My Storefront</a>
                 <a href="{% url 'logout' %}">Logout ({{ user.username }})</a>
             {% else %}
@@ -61,5 +62,8 @@
     <footer>
         <p>&copy; 2026 CrowdFund Platform | Mock Payment Integration - No Real Transactions</p>
     </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>

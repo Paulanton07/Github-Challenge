@@ -23,12 +23,33 @@ def dashboard(request):
     total_invested = user_investments.aggregate(Sum('amount'))['amount__sum'] or 0
     total_dividends = sum(inv.total_dividends_earned for inv in user_investments)
     
+    # Chart data: Portfolio distribution
+    portfolio_labels = []
+    portfolio_amounts = []
+    for inv in user_investments:
+        portfolio_labels.append(inv.project.title[:20])
+        portfolio_amounts.append(float(inv.amount))
+    
+    # Chart data: Project funding progress
+    project_names = []
+    project_progress = []
+    project_goals = []
+    for proj in user_projects[:5]:
+        project_names.append(proj.title[:15])
+        project_progress.append(float(proj.current_funding))
+        project_goals.append(float(proj.funding_goal))
+    
     context = {
         'user_investments': user_investments,
         'user_projects': user_projects,
         'total_invested': total_invested,
         'total_dividends': total_dividends,
         'projects_backed': user_investments.values('project').distinct().count(),
+        'portfolio_labels': portfolio_labels,
+        'portfolio_amounts': portfolio_amounts,
+        'project_names': project_names,
+        'project_progress': project_progress,
+        'project_goals': project_goals,
     }
     return render(request, 'dashboard.html', context)
 

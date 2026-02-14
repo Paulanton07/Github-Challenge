@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Investment Successful - CrowdFund{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto; text-align: center;">
+    <div class="card" style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); color: white; padding: 3rem;">
+        <h1 style="font-size: 3rem; margin-bottom: 1rem;">🎉</h1>
+        <h1 style="color: white;">Investment Successful!</h1>
+        <p style="font-size: 1.2rem; margin-top: 1rem; color: rgba(255,255,255,0.9);">
+            You've successfully invested <strong>R{{ investment.amount }}</strong> in {{ project.title }}
+        </p>
+    </div>
+    
+    <div class="card" style="margin-top: 2rem; text-align: left;">
+        <h2>Investment Details</h2>
+        <div style="margin-top: 1rem;">
+            <p><strong>Project:</strong> {{ project.title }}</p>
+            <p><strong>Amount Invested:</strong> R{{ investment.amount }}</p>
+            <p><strong>Your Ownership:</strong> {{ investment.ownership_percentage|floatformat:4 }}%</p>
+            <p><strong>Date:</strong> {{ investment.invested_at|date:"F d, Y" }}</p>
+            <p><strong>Status:</strong> {{ investment.get_status_display }}</p>
+        </div>
+        
+        <div style="margin-top: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 5px;">
+            <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">📊 What Happens Next?</h3>
+            <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                <li>Your investment is held in <strong>escrow</strong></li>
+                <li>If the project reaches its funding goal, funds are released to the creator</li>
+                <li>You'll receive dividends based on your ownership percentage</li>
+                <li>Track your investment in your <a href="{% url 'dashboard' %}">dashboard</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center;">
+        <a href="{% url 'project_detail' project.pk %}" class="btn btn-secondary">View Project</a>
+        <a href="{% url 'dashboard' %}" class="btn">Go to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

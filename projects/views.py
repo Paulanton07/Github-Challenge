@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
+from django.conf import settings
 from .models import Project
 from investments.models import Investment
 import uuid
@@ -25,6 +26,7 @@ def project_detail(request, pk):
         'project': project,
         'user_investment': user_investment,
         'days_remaining': (project.end_date - timezone.now()).days if project.end_date > timezone.now() else 0,
+        'SANDBOX_MODE': settings.SANDBOX_MODE,
     }
     return render(request, 'projects/project_detail.html', context)
 
